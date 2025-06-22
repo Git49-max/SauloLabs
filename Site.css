@@ -1,0 +1,941 @@
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #121212; /* Fundo bem escuro */
+  color: #eee; /* Cor do texto claro */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: flex-start; REMOVIDO: Era o motivo de estarem no topo */
+  justify-content: center; /* NOVO: Centraliza o conteúdo verticalmente */
+  min-height: 100vh; /* Ocupa a altura total da tela */
+  margin: 0;
+  /* overflow: hidden; */ /* REMOVIDO: Será gerenciado pelo JS para rolagem */
+  position: relative; /* Essencial para posicionar o conteúdo do canto e a frase inferior */
+  box-sizing: border-box;
+  /* NOVO: Propriedades para a barra de rolagem personalizada */
+  overflow-y: auto; /* Permite rolagem vertical no body */
+  scrollbar-width: thin; /* Para Firefox */
+  scrollbar-color: #00bcd4 #1e1e1e; /* thumb e track para Firefox */
+}
+
+/* NOVO: Estilos para a barra de rolagem baseada em Webkit (Chrome, Edge, Safari) */
+body::-webkit-scrollbar {
+  width: 12px; /* Largura da barra de rolagem */
+}
+
+body::-webkit-scrollbar-track {
+  background: #1e1e1e; /* Cor do fundo da barra de rolagem */
+  border-radius: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #00bcd4; /* Cor do "polegar" da barra de rolagem */
+  border-radius: 10px;
+  border: 3px solid #1e1e1e; /* Borda ao redor do polegar */
+  box-shadow: 0 0 8px rgba(0, 188, 212, 0.7); /* Brilho neon */
+}
+
+/* --- ESTILOS DOS BOTÕES FUTURISTAS --- */
+.container {
+  display: flex;
+  gap: 40px; /* Espaçamento entre os botões */
+  box-sizing: border-box;
+  width: 100%; /* Permite que ele use a largura total disponível */
+  justify-content: center; /* Centraliza os botões se houver espaço */
+  padding: 0 20px; /* Adiciona um padding para evitar que os botões encostem nas bordas da tela */
+  /* NOVO: Adicionado para garantir que o container não seja afetado pelas frases absolutas */
+  flex-grow: 1; /* Permite que o container ocupe o espaço disponível e ajude a centralizar */
+  align-items: center; /* Centraliza verticalmente o conteúdo do container */
+}
+
+.futuristic-button {
+  background-color: transparent; /* Fundo transparente */
+  color: #00bcd4; /* Cor neon ciano para o texto e borda */
+  border: 2px solid #00bcd4; /* Borda neon */
+  padding: 15px 30px;
+  font-size: 18px;
+  cursor: pointer; /* Muda o cursor para indicar que é clicável */
+  border-radius: 8px; /* Cantos levemente arredondados */
+  position: relative; /* Essencial para o pseudo-elemento ::before */
+  overflow: hidden; /* Garante que nada saia dos limites do botão */
+  z-index: 1; /* Garante que o botão fique acima de outros elementos se houver */
+  width: 250px; /* Defina uma largura fixa que seja suficiente para o maior texto */
+  text-align: center; /* Centraliza o texto dentro do botão */
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.36, 0.55, 0.45, 0.06),
+    box-shadow 0.4s cubic-bezier(0.36, 0.55, 0.45, 0.06), color 0.3s ease-in-out;
+  box-sizing: border-box;
+}
+
+.futuristic-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 188, 212, 0.1); /* Um brilho sutil ciano */
+  opacity: 0; /* Começa invisível */
+  transition: opacity 0.3s ease-in-out; /* Transição para o brilho aparecer */
+}
+
+.futuristic-button:hover::before {
+  opacity: 1; /* O brilho se torna visível */
+}
+
+.futuristic-button:hover {
+  transform: translateZ(20px) rotateX(15deg) rotateY(-15deg);
+  box-shadow: -10px 10px 20px rgba(0, 188, 212, 0.3);
+  color: #fff; /* Muda a cor do texto para branco */
+}
+
+/* --- ESTILOS PARA O CONTEÚDO DO CANTO SUPERIOR ESQUERDO --- */
+.top-left-content {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 188, 212, 0.2);
+  border: 1px solid rgba(0, 188, 212, 0.3);
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.top-left-content h1 {
+  font-size: 1.3em;
+  color: #00bcd4;
+  margin-top: 0;
+  margin-bottom: 10px;
+  text-shadow: 0 0 5px rgba(0, 188, 212, 0.7);
+}
+
+.top-left-content p {
+  font-size: 0.85em;
+  color: #ccc;
+  line-height: 1.6;
+  margin-bottom: 15px;
+}
+
+.corner-image {
+  max-width: 80px;
+  height: auto;
+  display: block;
+  margin-top: 10px;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 188, 212, 0.5);
+  box-shadow: 0 0 8px rgba(0, 188, 212, 0.4);
+}
+
+/* --- Estilos para o Overlay de Criar Conta e Entrar (genérico) --- */
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  box-sizing: border-box;
+  /* NOVO: Permite rolagem dentro do overlay se o conteúdo for muito grande */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* Suaviza a rolagem em dispositivos iOS */
+}
+
+/* Estilos específicos para a barra de rolagem dos overlays */
+.overlay::-webkit-scrollbar {
+  width: 10px;
+}
+
+.overlay::-webkit-scrollbar-track {
+  background: #1e1e1e;
+  border-radius: 10px;
+}
+
+.overlay::-webkit-scrollbar-thumb {
+  background-color: #00bcd4;
+  border-radius: 10px;
+  border: 2px solid #1e1e1e;
+}
+
+.overlay.is-active {
+  opacity: 1;
+}
+
+.modal {
+  background-color: #1e1e1e;
+  color: #00bcd4;
+  padding: 40px;
+  border: 2px solid #00bcd4;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0, 188, 212, 0.5);
+  max-width: 500px;
+  width: 90%;
+  box-sizing: border-box;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  /* NOVO: Permite rolagem interna do modal se o conteúdo for muito grande */
+  max-height: 90vh; /* Limita a altura do modal para que ele possa rolar */
+  overflow-y: auto; /* Permite rolagem vertical dentro do modal */
+  scrollbar-width: thin; /* Para Firefox */
+  scrollbar-color: #00bcd4 #2a2a2a; /* thumb e track para Firefox */
+}
+
+/* Estilos específicos para a barra de rolagem dos modais */
+.modal::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal::-webkit-scrollbar-track {
+  background: #2a2a2a;
+  border-radius: 8px;
+}
+
+.modal::-webkit-scrollbar-thumb {
+  background-color: #00bcd4;
+  border-radius: 8px;
+  border: 2px solid #2a2a2a;
+}
+
+.modal h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px rgba(0, 188, 212, 0.8);
+}
+
+/* --- ESTILOS PARA OS CAMPOS DE FORMULÁRIO --- */
+.input-group {
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 300px;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #eee;
+  font-size: 0.9em;
+  text-shadow: 0 0 3px rgba(0, 188, 212, 0.3);
+}
+
+.input-group input[type="text"],
+.input-group input[type="email"],
+.input-group input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #00bcd4;
+  border-radius: 5px;
+  background-color: #2a2a2a;
+  color: #eee;
+  font-size: 1em;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.input-group input[type="text"]:focus,
+.input-group input[type="email"]:focus,
+.input-group input[type="password"]:focus {
+  outline: none;
+  border-color: #00e6ff;
+  box-shadow: 0 0 10px rgba(0, 188, 212, 0.7);
+}
+
+.submit-button {
+  margin-top: 20px;
+  width: auto;
+  padding: 15px 40px;
+  box-sizing: border-box;
+}
+
+.back-button {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background-color: transparent;
+  color: #00bcd4;
+  border: 1px solid #00bcd4;
+  padding: 8px 15px;
+  font-size: 0.9em;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out,
+    box-shadow 0.3s ease-in-out;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.back-button:hover {
+  background-color: rgba(0, 188, 212, 0.1);
+  color: #fff;
+  box-shadow: 0 0 8px rgba(0, 188, 212, 0.5);
+}
+
+.top-phrase {
+  position: absolute;
+  top: 30px;
+  text-align: center;
+  font-size: 1.1em;
+  color: #00bcd4;
+  text-shadow: 0 0 8px rgba(0, 188, 212, 0.8);
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+  z-index: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.bottom-phrase {
+  position: absolute;
+  bottom: 30px;
+  text-align: center;
+  font-size: 2em;
+  color: #00bcd4;
+  text-shadow: 0 0 8px rgba(0, 188, 212, 0.8);
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+  z-index: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.bottom-phrase.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.top-phrase.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* === Estilos para o conteúdo da Biblioteca === */
+.library-content {
+  text-align: center;
+  color: #00bcd4;
+  text-shadow: 0 0 15px rgba(0, 188, 212, 0.9);
+  font-size: 3em;
+  padding: 20px;
+  width: 100%;
+  padding-top: 100px;
+  box-sizing: border-box;
+  overflow: hidden;
+  max-height: none;
+  position: relative;
+  z-index: 100;
+}
+
+.library-content h1 {
+  font-size: 1em;
+  margin: 0 auto 20px auto;
+  width: fit-content;
+  position: relative;
+}
+
+.library-content h1::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: #00bcd4;
+  box-shadow: 0 0 8px rgba(0, 188, 212, 0.7);
+  margin-top: 10px;
+}
+
+/* === Estilos para o canto superior direito da tela da Biblioteca === */
+.user-profile-corner {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 188, 212, 0.2);
+  border: 1px solid rgba(0, 188, 212, 0.3);
+  text-align: center;
+  cursor: pointer;
+  z-index: 1200;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none;
+  box-sizing: border-box;
+  position: fixed;
+}
+
+.user-profile-corner.is-active {
+  opacity: 1;
+  pointer-events: auto;
+  display: flex;
+}
+
+.user-profile-corner .profile-image {
+  max-width: 80px;
+  height: auto;
+  border-radius: 50%;
+  border: 2px solid #00bcd4;
+  box-shadow: 0 0 10px rgba(0, 188, 212, 0.7);
+  margin-bottom: 10px;
+}
+
+.user-profile-corner .username-text {
+  font-size: 1em;
+  color: #fff;
+  text-shadow: 0 0 5px rgba(0, 188, 212, 0.8);
+  margin: 0;
+}
+
+/* NOVO: Estilos para o contêiner dos cards de jogos */
+.games-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: flex-start;
+  padding: 20px;
+  max-width: 1200px;
+  margin-left: 50px;
+  margin-right: auto;
+  padding-bottom: 50px;
+  box-sizing: border-box;
+}
+
+/* NOVO: Estilos para cada Card de Jogo (incluindo "Minecraft Copia") */
+.game-card {
+  background-color: rgba(30, 30, 30, 0.7);
+  border: 2px solid #00bcd4;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  color: #eee;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+  min-height: 250px;
+  max-height: 500px;
+  box-shadow: 0 0 15px rgba(0, 188, 212, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease,
+    background-color 0.3s ease;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.game-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  background-color: rgba(0, 188, 212, 0.1);
+  box-shadow: 0 0 25px rgba(0, 188, 212, 0.7);
+}
+
+.game-card .game-title {
+  font-size: 0.6em;
+  color: #00bcd4;
+  margin-bottom: 15px;
+  text-shadow: 0 0 8px rgba(0, 188, 212, 0.8);
+}
+
+.game-card .game-icon {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 15px;
+  border: 2px solid #00e6ff;
+  box-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
+  margin-bottom: 15px;
+}
+
+.game-card .game-description {
+  font-size: 0.3em;
+  color: #ccc;
+  line-height: 1.4;
+}
+
+/* Estilos para o preço do jogo */
+.game-price {
+  font-size: 0.3em;
+  font-weight: bold;
+  color: #00ff00; /* Cor verde vibrante para o preço */
+  margin-top: -10px;
+  text-align: center;
+}
+
+/* NOVO: Aplica os estilos futuristas ao botão de download */
+.download-button {
+  background-color: transparent; /* Fundo transparente */
+  color: #00bcd4; /* Cor neon ciano para o texto e borda */
+  border: 2px solid #00bcd4; /* Borda neon */
+  padding: 10px 20px; /* Ajuste o padding para o tamanho do botão de download */
+  font-size: 0.5em; /* Tamanho da fonte para o botão de download */
+  cursor: pointer; /* Muda o cursor para indicar que é clicável */
+  border-radius: 8px; /* Cantos levemente arredondados */
+  position: relative; /* Essencial para o pseudo-elemento ::before */
+  overflow: hidden; /* Garante que nada saia dos limites do botão */
+  z-index: 1; /* Garante que o botão fique acima de outros elementos se houver */
+  width: 80%; /* Ajuste a largura conforme necessário */
+  text-align: center; /* Centraliza o texto dentro do botão */
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.36, 0.55, 0.45, 0.06),
+    box-shadow 0.4s cubic-bezier(0.36, 0.55, 0.45, 0.06), color 0.3s ease-in-out;
+  box-sizing: border-box;
+  margin-top: 15px; /* Mantém a margem superior */
+  align-self: center; /* Centraliza o botão dentro do flexbox */
+  min-height: 50px;
+}
+
+.download-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 188, 212, 0.1); /* Um brilho sutil ciano */
+  opacity: 0; /* Começa invisível */
+  transition: opacity 0.3s ease-in-out; /* Transição para o brilho aparecer */
+}
+
+.download-button:hover::before {
+  opacity: 1;
+}
+
+.download-button:hover {
+  transform: translateZ(
+    10px
+  ); /* Move para frente levemente no hover (menos que o principal) */
+  box-shadow: 0 0 15px rgba(0, 188, 212, 0.5); /* Sombra neon no hover */
+  color: #fff; /* Texto branco no hover */
+}
+
+/* NOVO: Estilos para o grupo do checkbox */
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 300px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.checkbox-group input[type="checkbox"] {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #00bcd4;
+  border-radius: 4px;
+  background-color: #2a2a2a;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.checkbox-group input[type="checkbox"]:checked {
+  background-color: #00bcd4;
+  border-color: #00e6ff;
+}
+
+.checkbox-group input[type="checkbox"]:checked::after {
+  content: "✔";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #1e1e1e;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.checkbox-group label {
+  margin-bottom: 0;
+  color: #eee;
+  font-size: 0.9em;
+  text-shadow: 0 0 3px rgba(0, 188, 212, 0.3);
+  cursor: pointer;
+}
+
+/* --- NOVO: Estilos para o menu de saída do perfil --- */
+.logout-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  background-color: #1e1e1e;
+  border: 2px solid #00bcd4;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 188, 212, 0.7);
+  padding: 10px;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 1150;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  min-width: 120px;
+  box-sizing: border-box;
+}
+
+.logout-menu.is-active {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* NOVO: Estilos para o botão "Sair" dentro do menu de saída */
+.logout-button {
+  background-color: transparent;
+  color: #ff0000;
+  border: 2px solid #ff0000;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  width: 100%;
+  text-align: center;
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.36, 0.55, 0.45, 0.06),
+    box-shadow 0.4s cubic-bezier(0.36, 0.55, 0.45, 0.06), color 0.3s ease-in-out;
+  box-sizing: border-box;
+}
+
+.logout-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 0, 0, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.logout-button:hover::before {
+  opacity: 1;
+}
+
+.logout-button:hover {
+  transform: translateZ(10px);
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+  color: #fff;
+}
+
+/* NOVO: Estilos para o botão "Configurações" dentro do menu de perfil */
+.settings-button {
+  background-color: transparent;
+  color: #00bcd4;
+  border: 2px solid #00bcd4;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  width: 100%;
+  text-align: center;
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.36, 0.55, 0.45, 0.06),
+    box-shadow 0.4s cubic-bezier(0.36, 0.55, 0.45, 0.06), color 0.3s ease-in-out;
+  box-sizing: border-box;
+}
+
+.settings-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 188, 212, 0.1);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.settings-button:hover::before {
+  opacity: 1;
+}
+
+.settings-button:hover {
+  transform: translateZ(10px);
+  box-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
+  color: #fff;
+}
+
+/* --- MODIFICAÇÕES NA GRID DE CONFIGURAÇÕES --- */
+.settings-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 50px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Ajuste do z-index do back-button na tela de configurações para ficar visível */
+#settingsScreen .back-button {
+  z-index: 1010;
+}
+
+/* NOVO: Estilos para um card de configuração genérico (Alterar Foto, Liberar Espaço, SAC) */
+.settings-card-button {
+  background-color: rgba(30, 30, 30, 0.7);
+  border: 2px solid #00bcd4;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  color: #eee;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+  min-height: 270px;
+  max-height: 270px;
+  box-shadow: 0 0 15px rgba(0, 188, 212, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease,
+    background-color 0.3s ease;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.settings-card-button:hover {
+  transform: translateY(-10px) scale(1.02);
+  background-color: rgba(0, 188, 212, 0.1);
+  box-shadow: 0 0 25px rgba(0, 188, 212, 0.7);
+}
+
+/* Estilos para o TÍTULO dentro dos botões de configuração */
+.settings-card-button .game-title {
+  font-size: 1.5em;
+  color: #00bcd4;
+  margin-bottom: 15px;
+  text-shadow: 0 0 8px rgba(0, 188, 212, 0.8);
+}
+
+/* Estilos para o ÍCONE dentro dos botões de configuração */
+.settings-card-button .game-icon {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  border-radius: 15px;
+  border: 2px solid #00e6ff;
+  box-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
+  margin-bottom: 15px;
+}
+
+/* Estilos para a DESCRIÇÃO dentro dos botões de configuração */
+.settings-card-button .game-description {
+  font-size: 1em;
+  color: #ccc;
+  line-height: 1.4;
+}
+
+/* Estilos para o novo overlay/modal de liberar espaço */
+#clearSpaceOverlay .modal {
+  max-width: 500px;
+  padding: 30px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+#clearSpaceOverlay h2 {
+  color: #00bcd4;
+  margin-bottom: 20px;
+  font-size: 1.8em;
+  text-shadow: 0 0 10px rgba(0, 188, 212, 0.8);
+}
+
+.account-list {
+  list-style: none;
+  padding: 0;
+  max-height: 400px;
+  overflow-y: auto; /* Adicionado scrollbar aqui */
+  margin-top: 20px;
+  border: 1px solid #00bcd4;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.4);
+  box-sizing: border-box;
+  /* NOVO: Estilos para a barra de rolagem da lista de contas */
+  scrollbar-width: thin;
+  scrollbar-color: #00bcd4 #2a2a2a;
+}
+
+.account-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.account-list::-webkit-scrollbar-track {
+  background: #2a2a2a;
+  border-radius: 8px;
+}
+
+.account-list::-webkit-scrollbar-thumb {
+  background-color: #00bcd4;
+  border-radius: 8px;
+  border: 2px solid #2a2a2a;
+}
+
+.account-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border-bottom: 1px solid rgba(0, 188, 212, 0.2);
+  color: #e0e0e0;
+  box-sizing: border-box;
+  gap: 10px;
+}
+
+.account-item:last-child {
+  border-bottom: none;
+}
+
+.account-item .username {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.account-item .delete-button {
+  background-color: #e53935;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.account-item .delete-button:hover {
+  background-color: #c62828;
+}
+
+.account-item.current-user {
+  background-color: rgba(0, 188, 212, 0.1);
+  color: #00bcd4;
+  cursor: not-allowed;
+}
+
+.account-item.current-user .delete-button {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- NOVO: Estilos para o overlay/modal do SAC --- */
+#sacOverlay .modal {
+  max-width: 500px;
+  padding: 30px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+#sacOverlay h2 {
+  color: #00bcd4;
+  margin-bottom: 30px;
+  font-size: 1.8em;
+  text-shadow: 0 0 10px rgba(0, 188, 212, 0.8);
+}
+
+.sac-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.sac-options .futuristic-button {
+  width: 100%;
+  font-size: 1.2em;
+  padding: 12px 20px;
+  box-sizing: border-box;
+}
+
+/* Estilos para o grupo de input no Gift Card */
+.gift-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.gift-card-content .input-group {
+  width: 80%;
+  max-width: 400px;
+  margin-bottom: 0;
+}
+
+.gift-card-content input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #555;
+  background-color: #333;
+  color: #eee;
+  font-size: 1em;
+  box-sizing: border-box;
+}
+
+.gift-card-content label {
+  display: block;
+  margin-bottom: 5px;
+  color: #eee;
+  font-weight: bold;
+}
+
+/* Estilo para a mensagem de feedback */
+.message-text {
+  margin-top: 10px;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-align: center;
+}
+
+.message-text.success {
+  color: #4caf50;
+}
+
+.message-text.error {
+  color: #f44336;
+}
+
+/* Estilos para o Saldo */
+.current-balance-text {
+  font-size: 1.5em;
+  color: #00ff00; /* Verde vibrante para o saldo */
+  font-weight: bold;
+  margin-top: 20px;
+  text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+}

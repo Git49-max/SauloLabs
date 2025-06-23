@@ -261,7 +261,7 @@ document.addEventListener("DOMContentLoaded", function () {
       MINECRAFT_PRICE_ORIGINAL * (descontoPercentual / 100)
     );
   }
-  const MINECRAFT_DOWNLOAD_URL = "Downloads/MinecraftCopia_Setup.exe";
+  const MINECRAFT_DOWNLOAD_URL = "Downloads/minecraft-copia.zip";
 
   // --- Funções de Controle de Exibição de Telas ---
 

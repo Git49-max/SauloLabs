@@ -261,7 +261,8 @@ document.addEventListener("DOMContentLoaded", function () {
       MINECRAFT_PRICE_ORIGINAL * (descontoPercentual / 100)
     );
   }
-  const MINECRAFT_DOWNLOAD_URL = "Downloads/minecraft-copia.zip";
+  const MINECRAFT_DOWNLOAD_URL =
+    "https://github.com/Git49-max/SauloLabs/raw/refs/heads/main/Downloads/minecraft-copia.zip";
 
   // --- Funções de Controle de Exibição de Telas ---
 
